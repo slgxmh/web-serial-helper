@@ -1,0 +1,38 @@
+{
+  "name": "web-serial-helper",
+  "version": "0.0.1",
+  "description": "A helper library for Web Serial API",
+  "author": "slgxmh <slgxmh@foxmail.com>",
+  "main": "./dist/index.js",
+  "module": "./dist/index.mjs",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "require": "./dist/index.js",
+      "import": "./dist/index.mjs",
+      "types": "./dist/index.d.ts"
+    }
+  },
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "tsup",
+    "prepublishOnly": "pnpm build"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/slgxmh/web-serial-helper.git"
+  },
+  "homepage": "https://github.com/slgxmh/web-serial-helper/blob/main/lib/README.md",
+  "keywords": [],
+  "license": "GNU GPLv3",
+  "packageManager": "pnpm@10.15.1",
+  "devDependencies": {
+    "tsup": "^8.5.0",
+    "typescript": "~5.8.3"
+  },
+  "dependencies": {
+    "@types/w3c-web-serial": "^1.0.8"
+  }
+}

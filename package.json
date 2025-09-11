@@ -1,0 +1,22 @@
+{
+  "name": "serial",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "prepare": "husky"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "packageManager": "pnpm@10.15.1",
+  "devDependencies": {
+    "@commitlint/cli": "^19.8.1",
+    "@commitlint/config-conventional": "^19.8.1",
+    "@trivago/prettier-plugin-sort-imports": "^5.2.2",
+    "husky": "^9.1.7",
+    "lint-staged": "^16.1.6",
+    "prettier": "3.6.2"
+  }
+}
