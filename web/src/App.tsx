@@ -1,7 +1,10 @@
+import "./i18n";
 import { WebSerial } from "lib";
 import { useState, useRef, useCallback, useEffect } from "react";
+import { useTranslation } from "react-i18next";
 
 function App() {
+  const { t } = useTranslation();
   const webSerial = useRef<WebSerial | null>(null);
   const [isConnected, setIsConnected] = useState(false);
   const [receivedData, setReceivedData] = useState<string[]>([]);
@@ -95,11 +98,11 @@ function App() {
 
   return (
     <div style={{ padding: "20px", fontFamily: "sans-serif" }}>
-      <h1>Web Serial API Demo</h1>
+      <h1>{t("appName")}</h1>
       {!isConnected ? (
         <div>
           <label>
-            Baud Rate:
+            {t("baudRate")}:
             <select
               value={baudRate}
               onChange={(e) => setBaudRate(Number(e.target.value))}
@@ -112,7 +115,7 @@ function App() {
             </select>
           </label>
           <button onClick={handleConnect} style={{ marginLeft: "10px" }}>
-            Connect
+            {t("connect")}
           </button>
         </div>
       ) : (
@@ -120,7 +123,7 @@ function App() {
       )}
 
       <div style={{ marginTop: "20px" }}>
-        <h2>Receive</h2>
+        <h2>{t("receive")}</h2>
         <div>
           <label>
             <input
@@ -130,7 +133,7 @@ function App() {
               checked={receiveMode === "text"}
               onChange={() => setReceiveMode("text")}
             />
-            Text
+            {t("text")}
           </label>
           <label style={{ marginLeft: "10px" }}>
             <input
@@ -140,7 +143,7 @@ function App() {
               checked={receiveMode === "hex"}
               onChange={() => setReceiveMode("hex")}
             />
-            Hex
+            {t("hex")}
           </label>
         </div>
         <textarea
@@ -153,12 +156,12 @@ function App() {
           onClick={() => setReceivedData([])}
           style={{ marginTop: "10px" }}
         >
-          Clear
+          {t("clear")}
         </button>
       </div>
 
       <div style={{ marginTop: "20px" }}>
-        <h2>Send</h2>
+        <h2>{t("send")}</h2>
         <div>
           <label>
             <input
@@ -168,7 +171,7 @@ function App() {
               checked={sendMode === "text"}
               onChange={() => setSendMode("text")}
             />
-            Text
+            {t("text")}
           </label>
           <label style={{ marginLeft: "10px" }}>
             <input
@@ -178,7 +181,7 @@ function App() {
               checked={sendMode === "hex"}
               onChange={() => setSendMode("hex")}
             />
-            Hex
+            {t("hex")}
           </label>
         </div>
         <textarea
@@ -188,7 +191,7 @@ function App() {
           style={{ width: "100%", marginTop: "10px" }}
         />
         <button onClick={handleSendData} style={{ marginTop: "10px" }}>
-          Send
+          {t("send")}
         </button>
       </div>
     </div>
