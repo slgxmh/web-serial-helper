@@ -1,0 +1,10 @@
+{
+  "appName": "Web Serial Helper",
+  "baudRate": "Baud Rate",
+  "clear": "Clear",
+  "connect": "Connect",
+  "hex": "Hex",
+  "receive": "Receive",
+  "send": "Send",
+  "text": "Text"
+}

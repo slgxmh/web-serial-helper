@@ -1,0 +1,10 @@
+{
+  "appName": "Web串口助手",
+  "baudRate": "波特率",
+  "clear": "清空",
+  "connect": "连接",
+  "hex": "十六进制",
+  "receive": "接收",
+  "send": "发送",
+  "text": "文本"
+}

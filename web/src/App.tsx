@@ -1,7 +1,11 @@
+import AppHeader from "./components/AppHeader";
+import "./i18n";
 import { WebSerial } from "lib";
 import { useState, useRef, useCallback, useEffect } from "react";
+import { useTranslation } from "react-i18next";
 
 function App() {
+  const { t } = useTranslation();
   const webSerial = useRef<WebSerial | null>(null);
   const [isConnected, setIsConnected] = useState(false);
   const [receivedData, setReceivedData] = useState<string[]>([]);
@@ -94,104 +98,129 @@ function App() {
   }, [isConnected, startReading]);
 
   return (
-    <div style={{ padding: "20px", fontFamily: "sans-serif" }}>
-      <h1>Web Serial API Demo</h1>
-      {!isConnected ? (
-        <div>
-          <label>
-            Baud Rate:
-            <select
-              value={baudRate}
-              onChange={(e) => setBaudRate(Number(e.target.value))}
-            >
-              <option value="9600">9600</option>
-              <option value="19200">19200</option>
-              <option value="38400">38400</option>
-              <option value="57600">57600</option>
-              <option value="115200">115200</option>
-            </select>
-          </label>
-          <button onClick={handleConnect} style={{ marginLeft: "10px" }}>
-            Connect
-          </button>
+    <>
+      <AppHeader />
+      <div className="container mx-auto p-4">
+        <div className="flex justify-center items-center my-4">
+          {!isConnected ? (
+            <div className="flex items-center gap-2">
+              <label className="input input-bordered flex items-center gap-2">
+                {t("baudRate")}:
+                <select
+                  value={baudRate}
+                  onChange={(e) => setBaudRate(Number(e.target.value))}
+                  className="select select-ghost"
+                >
+                  <option value="9600">9600</option>
+                  <option value="19200">19200</option>
+                  <option value="38400">38400</option>
+                  <option value="57600">57600</option>
+                  <option value="115200">115200</option>
+                </select>
+              </label>
+              <button onClick={handleConnect} className="btn btn-primary">
+                {t("connect")}
+              </button>
+            </div>
+          ) : (
+            <button onClick={handleDisconnect} className="btn btn-secondary">
+              {t("disconnect")}
+            </button>
+          )}
         </div>
-      ) : (
-        <button onClick={handleDisconnect}>Disconnect</button>
-      )}
 
-      <div style={{ marginTop: "20px" }}>
-        <h2>Receive</h2>
-        <div>
-          <label>
-            <input
-              type="radio"
-              name="receiveMode"
-              value="text"
-              checked={receiveMode === "text"}
-              onChange={() => setReceiveMode("text")}
-            />
-            Text
-          </label>
-          <label style={{ marginLeft: "10px" }}>
-            <input
-              type="radio"
-              name="receiveMode"
-              value="hex"
-              checked={receiveMode === "hex"}
-              onChange={() => setReceiveMode("hex")}
-            />
-            Hex
-          </label>
-        </div>
-        <textarea
-          readOnly
-          value={receivedData.join("\n")}
-          rows={10}
-          style={{ width: "100%", marginTop: "10px", whiteSpace: "pre-wrap" }}
-        />
-        <button
-          onClick={() => setReceivedData([])}
-          style={{ marginTop: "10px" }}
-        >
-          Clear
-        </button>
-      </div>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div className="card bg-base-100 shadow-xl">
+            <div className="card-body">
+              <h2 className="card-title">{t("receive")}</h2>
+              <div className="form-control">
+                <label className="label cursor-pointer">
+                  <span className="label-text">{t("text")}</span>
+                  <input
+                    type="radio"
+                    name="receiveMode"
+                    value="text"
+                    className="radio"
+                    checked={receiveMode === "text"}
+                    onChange={() => setReceiveMode("text")}
+                  />
+                </label>
+              </div>
+              <div className="form-control">
+                <label className="label cursor-pointer">
+                  <span className="label-text">{t("hex")}</span>
+                  <input
+                    type="radio"
+                    name="receiveMode"
+                    value="hex"
+                    className="radio"
+                    checked={receiveMode === "hex"}
+                    onChange={() => setReceiveMode("hex")}
+                  />
+                </label>
+              </div>
+              <textarea
+                readOnly
+                value={receivedData.join("\n")}
+                rows={10}
+                className="textarea textarea-bordered w-full mt-2"
+              />
+              <div className="card-actions justify-end">
+                <button
+                  onClick={() => setReceivedData([])}
+                  className="btn btn-ghost"
+                >
+                  {t("clear")}
+                </button>
+              </div>
+            </div>
+          </div>
 
-      <div style={{ marginTop: "20px" }}>
-        <h2>Send</h2>
-        <div>
-          <label>
-            <input
-              type="radio"
-              name="sendMode"
-              value="text"
-              checked={sendMode === "text"}
-              onChange={() => setSendMode("text")}
-            />
-            Text
-          </label>
-          <label style={{ marginLeft: "10px" }}>
-            <input
-              type="radio"
-              name="sendMode"
-              value="hex"
-              checked={sendMode === "hex"}
-              onChange={() => setSendMode("hex")}
-            />
-            Hex
-          </label>
+          <div className="card bg-base-100 shadow-xl">
+            <div className="card-body">
+              <h2 className="card-title">{t("send")}</h2>
+              <div className="form-control">
+                <label className="label cursor-pointer">
+                  <span className="label-text">{t("text")}</span>
+                  <input
+                    type="radio"
+                    name="sendMode"
+                    value="text"
+                    className="radio"
+                    checked={sendMode === "text"}
+                    onChange={() => setSendMode("text")}
+                  />
+                </label>
+              </div>
+              <div className="form-control">
+                <label className="label cursor-pointer">
+                  <span className="label-text">{t("hex")}</span>
+                  <input
+                    type="radio"
+                    name="sendMode"
+                    value="hex"
+                    className="radio"
+                    checked={sendMode === "hex"}
+                    onChange={() => setSendMode("hex")}
+                  />
+                </label>
+              </div>
+              <textarea
+                value={inputText}
+                onChange={(e) => setInputText(e.target.value)}
+                rows={4}
+                className="textarea textarea-bordered w-full mt-2"
+              />
+              <div className="card-actions justify-end">
+                <button onClick={handleSendData} className="btn btn-primary">
+                  {t("send")}
+                </button>
+              </div>
+            </div>
+          </div>
         </div>
-        <textarea
-          value={inputText}
-          onChange={(e) => setInputText(e.target.value)}
-          rows={4}
-          style={{ width: "100%", marginTop: "10px" }}
-        />
-        <button onClick={handleSendData} style={{ marginTop: "10px" }}>
-          Send
-        </button>
       </div>
-    </div>
+    </>
   );
 }
 
