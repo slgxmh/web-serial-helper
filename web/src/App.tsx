@@ -1,8 +1,8 @@
 import AppHeader from "./components/AppHeader";
 import "./i18n";
-import { WebSerial } from "lib";
 import { useState, useRef, useCallback, useEffect } from "react";
 import { useTranslation } from "react-i18next";
+import { WebSerial } from "web-serial-helper";
 
 function App() {
   const { t } = useTranslation();
