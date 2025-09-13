@@ -3,7 +3,9 @@
   "baudRate": "Baud Rate",
   "clear": "Clear",
   "connect": "Connect",
+  "disconnect": "Disconnect",
   "hex": "Hex",
+  "reconnect": "Reconnect",
   "receive": "Receive",
   "send": "Send",
   "text": "Text"

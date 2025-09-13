@@ -13,9 +13,21 @@ function App() {
   const [receiveMode, setReceiveMode] = useState<"text" | "hex">("text");
   const [inputText, setInputText] = useState("");
   const [baudRate, setBaudRate] = useState(115200);
+  const [availablePorts, setAvailablePorts] = useState<SerialPort[]>([]);
 
   useEffect(() => {
     webSerial.current = new WebSerial();
+    const getPorts = async () => {
+      if (WebSerial.isSupported()) {
+        try {
+          const ports = await WebSerial.getPorts();
+          setAvailablePorts(ports);
+        } catch (e) {
+          console.error(e);
+        }
+      }
+    };
+    getPorts();
   }, []);
 
   const startReading = useCallback(async () => {
@@ -48,6 +60,19 @@ function App() {
       console.error(error);
     }
   }, [baudRate]);
+
+  const handleAutoConnect = useCallback(async () => {
+    if (!webSerial.current || availablePorts.length === 0) return;
+
+    try {
+      // Use the first available port
+      webSerial.current.setPort(availablePorts[0]);
+      await webSerial.current.open({ baudRate });
+      setIsConnected(true);
+    } catch (error) {
+      console.error(error);
+    }
+  }, [availablePorts, baudRate]);
 
   const handleDisconnect = useCallback(async () => {
     if (!webSerial.current) return;
@@ -121,6 +146,11 @@ function App() {
               <button onClick={handleConnect} className="btn btn-primary">
                 {t("connect")}
               </button>
+              {availablePorts.length > 0 && (
+                <button onClick={handleAutoConnect} className="btn btn-accent">
+                  {t("reconnect")}
+                </button>
+              )}
             </div>
           ) : (
             <button onClick={handleDisconnect} className="btn btn-secondary">
