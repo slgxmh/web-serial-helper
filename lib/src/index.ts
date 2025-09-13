@@ -1,8 +1,3 @@
-// Check for Web Serial API support
-if (!("serial" in navigator)) {
-  console.error("Web Serial API not supported in this browser.");
-}
-
 export class WebSerial {
   private port: SerialPort | null = null;
   private reader: ReadableStreamDefaultReader<Uint8Array> | null = null;
@@ -16,7 +11,26 @@ export class WebSerial {
     return "serial" in navigator;
   }
 
+  /**
+   * Gets the list of available serial ports that have been previously granted permission.
+   * @returns {Promise<SerialPort[]>} A promise that resolves with an array of SerialPort objects.
+   */
+  public static async getPorts(): Promise<SerialPort[]> {
+    if (!WebSerial.isSupported()) {
+      throw new Error("Web Serial API not supported.");
+    }
+    return (navigator as any).serial.getPorts();
+  }
+
   constructor() {}
+
+  /**
+   * Sets a serial port to be used.
+   * @param {SerialPort} port - The serial port to use.
+   */
+  public setPort(port: SerialPort): void {
+    this.port = port;
+  }
 
   /**
    * Requests a serial port from the user.
@@ -73,7 +87,6 @@ export class WebSerial {
       } catch (error) {
         // Ignore cancel error
       } finally {
-        this.reader.releaseLock();
         this.reader = null;
       }
     }
@@ -84,7 +97,6 @@ export class WebSerial {
       } catch (error) {
         // Ignore close error
       } finally {
-        this.writer.releaseLock();
         this.writer = null;
       }
     }
@@ -151,6 +163,8 @@ export class WebSerial {
         console.error("Error while reading from serial port:", error);
         if (onError) {
           onError(error);
+        } else {
+          throw error;
         }
       }
     }
