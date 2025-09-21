@@ -131,17 +131,12 @@ function App() {
             <div className="flex items-center gap-2">
               <label className="input input-bordered flex items-center gap-2">
                 {t("baudRate")}:
-                <select
+                <input
+                  type="number"
                   value={baudRate}
                   onChange={(e) => setBaudRate(Number(e.target.value))}
-                  className="select select-ghost"
-                >
-                  <option value="9600">9600</option>
-                  <option value="19200">19200</option>
-                  <option value="38400">38400</option>
-                  <option value="57600">57600</option>
-                  <option value="115200">115200</option>
-                </select>
+                  className="grow"
+                />
               </label>
               <button onClick={handleConnect} className="btn btn-primary">
                 {t("connect")}
