@@ -6,6 +6,7 @@ import { WebSerial } from "web-serial-helper";
 
 function App() {
   const { t } = useTranslation();
+  const [projectName, setProjectName] = useState(t("defaultProjectName"));
   const webSerial = useRef<WebSerial | null>(null);
   const [isConnected, setIsConnected] = useState(false);
   const [receivedData, setReceivedData] = useState<string[]>([]);
@@ -126,6 +127,17 @@ function App() {
     <>
       <AppHeader />
       <div className="container mx-auto p-4">
+        <div className="form-control w-full max-w-xs mx-auto my-4">
+          <label className="label">
+            <span className="label-text">{t("projectName")}</span>
+          </label>
+          <input
+            type="text"
+            value={projectName}
+            onChange={(e) => setProjectName(e.target.value)}
+            className="input input-bordered w-full max-w-xs"
+          />
+        </div>
         <div className="flex justify-center items-center my-4">
           {!isConnected ? (
             <div className="flex items-center gap-2">
