@@ -15,6 +15,7 @@ function App() {
   const webSerial = useRef<WebSerial | null>(null);
   const [isConnected, setIsConnected] = useState(false);
   const [receivedData, setReceivedData] = useState<string[]>([]);
+  const [itemName, setItemName] = useState(projectCurrentItem.name);
   const [sendMode, setSendMode] = useState<"text" | "hex">(
     projectCurrentItem.sendMode,
   );
@@ -139,8 +140,17 @@ function App() {
   return (
     <>
       <Layout>
-        <div className="container mx-auto p-4">
-          <div className="flex justify-between items-center my-4">
+        <div className="container mx-auto p-4 space-y-4">
+          <div className="flex items-center gap-2">
+            <span className="label">{t("projectItemName")}:</span>
+            <input
+              className="input"
+              type="text"
+              value={itemName}
+              onChange={(e) => setItemName(e.target.value)}
+            />
+          </div>
+          <div className="flex justify-between items-center">
             {!isConnected ? (
               <div className="flex items-center gap-2">
                 <span className="flex-none text-xl font-bold">
