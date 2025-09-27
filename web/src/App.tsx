@@ -140,7 +140,7 @@ function App() {
     <>
       <Layout>
         <div className="container mx-auto p-4">
-          <div className="flex items-center my-4">
+          <div className="flex justify-between items-center my-4">
             {!isConnected ? (
               <div className="flex items-center gap-2">
                 <span className="flex-none text-xl font-bold">
@@ -171,6 +171,7 @@ function App() {
                 {t("disconnect")}
               </button>
             )}
+            <button className="btn btn-secondary">{t("save")}</button>
           </div>
 
           <div className="grid grid-cols-1 xl:grid-cols-2 gap-4">
