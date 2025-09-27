@@ -1,8 +1,11 @@
+import { projectNameAtom } from "../../stores/project";
+import { useAtom } from "jotai";
 import { Globe } from "lucide-react";
 import { useTranslation } from "react-i18next";
 
 export function Header() {
   const { t, i18n } = useTranslation();
+  const [projectName] = useAtom(projectNameAtom);
 
   const changeLanguage = (lng: string) => {
     i18n.changeLanguage(lng);
@@ -27,8 +30,10 @@ export function Header() {
           </svg>
         </button>
       </div>
-      <div className="flex-1">
-        <a className="btn btn-ghost text-xl">{t("appName")}</a>
+      <div className="flex-1 flex items-center gap-2">
+        <a className=" text-xl">{t("appName")}</a>
+        <span>-</span>
+        <span className="text-xl ">{projectName}</span>
       </div>
       <div className="flex-none">
         <div className="dropdown">
