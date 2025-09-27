@@ -140,11 +140,13 @@ function App() {
     <>
       <Layout>
         <div className="container mx-auto p-4">
-          <div className="flex justify-center items-center my-4">
+          <div className="flex items-center my-4">
             {!isConnected ? (
               <div className="flex items-center gap-2">
-                <label className="input input-bordered flex items-center gap-2">
+                <span className="flex-none text-xl font-bold">
                   {t("baudRate")}:
+                </span>
+                <label className="input input-bordered flex items-center gap-2 flex-1">
                   <input
                     type="number"
                     value={baudRate}
@@ -171,7 +173,7 @@ function App() {
             )}
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 xl:grid-cols-2 gap-4">
             <div className="card bg-base-100 shadow-xl">
               <div className="card-body">
                 <h2 className="card-title">{t("receive")}</h2>
