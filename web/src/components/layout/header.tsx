@@ -1,7 +1,7 @@
 import { Globe } from "lucide-react";
 import { useTranslation } from "react-i18next";
 
-export default function AppHeader() {
+export function Header() {
   const { t, i18n } = useTranslation();
 
   const changeLanguage = (lng: string) => {
