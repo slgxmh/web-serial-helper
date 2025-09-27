@@ -144,26 +144,24 @@ function App() {
           <div className="flex items-center gap-2">
             <span className="label">{t("projectItemName")}:</span>
             <input
-              className="input"
+              className="input flex"
               type="text"
               value={itemName}
               onChange={(e) => setItemName(e.target.value)}
             />
+            <div className="flex-1"></div>
+            <button className="btn btn-secondary">{t("save")}</button>
           </div>
           <div className="flex justify-between items-center">
             {!isConnected ? (
               <div className="flex items-center gap-2">
-                <span className="flex-none text-xl font-bold">
-                  {t("baudRate")}:
-                </span>
-                <label className="input input-bordered flex items-center gap-2 flex-1">
-                  <input
-                    type="number"
-                    value={baudRate}
-                    onChange={(e) => setBaudRate(Number(e.target.value))}
-                    className="grow"
-                  />
-                </label>
+                <span className="label">{t("baudRate")}:</span>
+                <input
+                  type="number"
+                  value={baudRate}
+                  onChange={(e) => setBaudRate(Number(e.target.value))}
+                  className="input"
+                />
                 <button onClick={handleConnect} className="btn btn-primary">
                   {t("connect")}
                 </button>
@@ -181,7 +179,6 @@ function App() {
                 {t("disconnect")}
               </button>
             )}
-            <button className="btn btn-secondary">{t("save")}</button>
           </div>
 
           <div className="grid grid-cols-1 xl:grid-cols-2 gap-4">
