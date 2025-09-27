@@ -1,4 +1,4 @@
-import AppHeader from "./components/AppHeader";
+import Layout from "./components/layout";
 import "./i18n";
 import { useState, useRef, useCallback, useEffect } from "react";
 import { useTranslation } from "react-i18next";
@@ -131,138 +131,142 @@ function App() {
 
   return (
     <>
-      <AppHeader />
-      <div className="container mx-auto p-4">
-        <div className="form-control w-full max-w-xs mx-auto my-4">
-          <label className="label">
-            <span className="label-text">{t("projectName")}</span>
-          </label>
-          <input
-            type="text"
-            value={projectName}
-            onChange={(e) => setProjectName(e.target.value)}
-            className="input input-bordered w-full max-w-xs"
-          />
-        </div>
-        <div className="flex justify-center items-center my-4">
-          {!isConnected ? (
-            <div className="flex items-center gap-2">
-              <label className="input input-bordered flex items-center gap-2">
-                {t("baudRate")}:
-                <input
-                  type="number"
-                  value={baudRate}
-                  onChange={(e) => setBaudRate(Number(e.target.value))}
-                  className="grow"
-                />
-              </label>
-              <button onClick={handleConnect} className="btn btn-primary">
-                {t("connect")}
+      <Layout>
+        <div className="container mx-auto p-4">
+          <div className="form-control w-full max-w-xs mx-auto my-4">
+            <label className="label">
+              <span className="label-text">{t("projectName")}</span>
+            </label>
+            <input
+              type="text"
+              value={projectName}
+              onChange={(e) => setProjectName(e.target.value)}
+              className="input input-bordered w-full max-w-xs"
+            />
+          </div>
+          <div className="flex justify-center items-center my-4">
+            {!isConnected ? (
+              <div className="flex items-center gap-2">
+                <label className="input input-bordered flex items-center gap-2">
+                  {t("baudRate")}:
+                  <input
+                    type="number"
+                    value={baudRate}
+                    onChange={(e) => setBaudRate(Number(e.target.value))}
+                    className="grow"
+                  />
+                </label>
+                <button onClick={handleConnect} className="btn btn-primary">
+                  {t("connect")}
+                </button>
+                {availablePorts.length > 0 && (
+                  <button
+                    onClick={handleAutoConnect}
+                    className="btn btn-accent"
+                  >
+                    {t("reconnect")}
+                  </button>
+                )}
+              </div>
+            ) : (
+              <button onClick={handleDisconnect} className="btn btn-secondary">
+                {t("disconnect")}
               </button>
-              {availablePorts.length > 0 && (
-                <button onClick={handleAutoConnect} className="btn btn-accent">
-                  {t("reconnect")}
-                </button>
-              )}
-            </div>
-          ) : (
-            <button onClick={handleDisconnect} className="btn btn-secondary">
-              {t("disconnect")}
-            </button>
-          )}
-        </div>
-
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <div className="card bg-base-100 shadow-xl">
-            <div className="card-body">
-              <h2 className="card-title">{t("receive")}</h2>
-              <div className="form-control">
-                <label className="label cursor-pointer">
-                  <span className="label-text">{t("text")}</span>
-                  <input
-                    type="radio"
-                    name="receiveMode"
-                    value="text"
-                    className="radio"
-                    checked={receiveMode === "text"}
-                    onChange={() => setReceiveMode("text")}
-                  />
-                </label>
-              </div>
-              <div className="form-control">
-                <label className="label cursor-pointer">
-                  <span className="label-text">{t("hex")}</span>
-                  <input
-                    type="radio"
-                    name="receiveMode"
-                    value="hex"
-                    className="radio"
-                    checked={receiveMode === "hex"}
-                    onChange={() => setReceiveMode("hex")}
-                  />
-                </label>
-              </div>
-              <textarea
-                readOnly
-                value={receivedData.join("\n")}
-                rows={10}
-                className="textarea textarea-bordered w-full mt-2"
-              />
-              <div className="card-actions justify-end">
-                <button
-                  onClick={() => setReceivedData([])}
-                  className="btn btn-ghost"
-                >
-                  {t("clear")}
-                </button>
-              </div>
-            </div>
+            )}
           </div>
 
-          <div className="card bg-base-100 shadow-xl">
-            <div className="card-body">
-              <h2 className="card-title">{t("send")}</h2>
-              <div className="form-control">
-                <label className="label cursor-pointer">
-                  <span className="label-text">{t("text")}</span>
-                  <input
-                    type="radio"
-                    name="sendMode"
-                    value="text"
-                    className="radio"
-                    checked={sendMode === "text"}
-                    onChange={() => setSendMode("text")}
-                  />
-                </label>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div className="card bg-base-100 shadow-xl">
+              <div className="card-body">
+                <h2 className="card-title">{t("receive")}</h2>
+                <div className="form-control">
+                  <label className="label cursor-pointer">
+                    <span className="label-text">{t("text")}</span>
+                    <input
+                      type="radio"
+                      name="receiveMode"
+                      value="text"
+                      className="radio"
+                      checked={receiveMode === "text"}
+                      onChange={() => setReceiveMode("text")}
+                    />
+                  </label>
+                </div>
+                <div className="form-control">
+                  <label className="label cursor-pointer">
+                    <span className="label-text">{t("hex")}</span>
+                    <input
+                      type="radio"
+                      name="receiveMode"
+                      value="hex"
+                      className="radio"
+                      checked={receiveMode === "hex"}
+                      onChange={() => setReceiveMode("hex")}
+                    />
+                  </label>
+                </div>
+                <textarea
+                  readOnly
+                  value={receivedData.join("\n")}
+                  rows={10}
+                  className="textarea textarea-bordered w-full mt-2"
+                />
+                <div className="card-actions justify-end">
+                  <button
+                    onClick={() => setReceivedData([])}
+                    className="btn btn-ghost"
+                  >
+                    {t("clear")}
+                  </button>
+                </div>
               </div>
-              <div className="form-control">
-                <label className="label cursor-pointer">
-                  <span className="label-text">{t("hex")}</span>
-                  <input
-                    type="radio"
-                    name="sendMode"
-                    value="hex"
-                    className="radio"
-                    checked={sendMode === "hex"}
-                    onChange={() => setSendMode("hex")}
-                  />
-                </label>
-              </div>
-              <textarea
-                value={inputText}
-                onChange={(e) => setInputText(e.target.value)}
-                rows={4}
-                className="textarea textarea-bordered w-full mt-2"
-              />
-              <div className="card-actions justify-end">
-                <button onClick={handleSendData} className="btn btn-primary">
-                  {t("send")}
-                </button>
+            </div>
+
+            <div className="card bg-base-100 shadow-xl">
+              <div className="card-body">
+                <h2 className="card-title">{t("send")}</h2>
+                <div className="form-control">
+                  <label className="label cursor-pointer">
+                    <span className="label-text">{t("text")}</span>
+                    <input
+                      type="radio"
+                      name="sendMode"
+                      value="text"
+                      className="radio"
+                      checked={sendMode === "text"}
+                      onChange={() => setSendMode("text")}
+                    />
+                  </label>
+                </div>
+                <div className="form-control">
+                  <label className="label cursor-pointer">
+                    <span className="label-text">{t("hex")}</span>
+                    <input
+                      type="radio"
+                      name="sendMode"
+                      value="hex"
+                      className="radio"
+                      checked={sendMode === "hex"}
+                      onChange={() => setSendMode("hex")}
+                    />
+                  </label>
+                </div>
+                <textarea
+                  value={inputText}
+                  onChange={(e) => setInputText(e.target.value)}
+                  rows={4}
+                  className="textarea textarea-bordered w-full mt-2"
+                />
+                <div className="card-actions justify-end">
+                  <button onClick={handleSendData} className="btn btn-primary">
+                    {t("send")}
+                  </button>
+                </div>
               </div>
             </div>
           </div>
         </div>
-      </div>
+      </Layout>
     </>
   );
 }
