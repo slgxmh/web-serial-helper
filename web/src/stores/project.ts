@@ -1,9 +1,22 @@
 import { type ProjectT, type ProjectItemT, projectZ } from "../types/project";
 import { atom } from "jotai";
 
-export const projectNameAtom = atom("");
-export const projectItemsAtom = atom<ProjectItemT[]>([]);
-export const projectCurrentItemIndex = atom(-1);
+const defaultProject: ProjectT = {
+  name: "hello serial",
+  items: [
+    {
+      name: "hello world",
+      baudRate: 115200,
+      sendMode: "hex",
+      sendData: "",
+      receivedMode: "hex",
+    },
+  ],
+};
+
+export const projectNameAtom = atom(defaultProject.name);
+export const projectItemsAtom = atom<ProjectItemT[]>(defaultProject.items);
+export const projectCurrentItemIndex = atom(0);
 
 export const currentItem = atom((get) => {
   const index = get(projectCurrentItemIndex);
