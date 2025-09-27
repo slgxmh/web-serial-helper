@@ -10,7 +10,6 @@ export function SiderBar() {
   return (
     <ul className="menu bg-base-200 rounded-box w-56">
       <li className="menu-title">
-        {" "}
         <div className="form-control w-full max-w-xs mx-auto my-4">
           <label className="label">
             <span className="label-text">{t("projectName")}</span>
