@@ -4,6 +4,8 @@ import { useState, useRef, useCallback, useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import { WebSerial } from "web-serial-helper";
 
+const MAX_RECEIVE_LENGTH = 100;
+
 function App() {
   const { t } = useTranslation();
   const [projectName, setProjectName] = useState(t("defaultProjectName"));
@@ -35,12 +37,16 @@ function App() {
     if (!webSerial.current) return;
 
     const onDataHex = (data: string) => {
-      setReceivedData((prev) => [...prev, `[HEX] ${data}`]);
+      setReceivedData((prev) =>
+        [...prev, `[HEX] ${data}`].slice(-MAX_RECEIVE_LENGTH),
+      );
     };
 
     const onDataBytes = (data: Uint8Array) => {
       const textDecoder = new TextDecoder();
-      setReceivedData((prev) => [...prev, textDecoder.decode(data)]);
+      setReceivedData((prev) =>
+        [...prev, textDecoder.decode(data)].slice(-MAX_RECEIVE_LENGTH),
+      );
     };
 
     if (receiveMode === "hex") {
