@@ -5,7 +5,7 @@ export const projectItemZ = z.object({
   baudRate: z.number(),
   sendMode: z.enum(["text", "hex"]),
   sendData: z.string(),
-  receivedMode: z.enum(["text", "hex"]),
+  receiveMode: z.enum(["text", "hex"]),
 });
 export type ProjectItemT = z.infer<typeof projectItemZ>;
 

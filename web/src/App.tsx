@@ -1,5 +1,7 @@
 import Layout from "./components/layout";
 import "./i18n";
+import { projectCurrentItemAtom } from "./stores/project";
+import { useAtom } from "jotai";
 import { useState, useRef, useCallback, useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import { WebSerial } from "web-serial-helper";
@@ -7,14 +9,20 @@ import { WebSerial } from "web-serial-helper";
 const MAX_RECEIVE_LENGTH = 100;
 
 function App() {
+  const [projectCurrentItem] = useAtom(projectCurrentItemAtom);
+
   const { t } = useTranslation();
   const webSerial = useRef<WebSerial | null>(null);
   const [isConnected, setIsConnected] = useState(false);
   const [receivedData, setReceivedData] = useState<string[]>([]);
-  const [sendMode, setSendMode] = useState<"text" | "hex">("text");
-  const [receiveMode, setReceiveMode] = useState<"text" | "hex">("text");
-  const [inputText, setInputText] = useState("");
-  const [baudRate, setBaudRate] = useState(115200);
+  const [sendMode, setSendMode] = useState<"text" | "hex">(
+    projectCurrentItem.sendMode,
+  );
+  const [receiveMode, setReceiveMode] = useState<"text" | "hex">(
+    projectCurrentItem.receiveMode,
+  );
+  const [sendData, setSendData] = useState(projectCurrentItem.sendData);
+  const [baudRate, setBaudRate] = useState(projectCurrentItem.baudRate);
   const [availablePorts, setAvailablePorts] = useState<SerialPort[]>([]);
 
   useEffect(() => {
@@ -93,21 +101,21 @@ function App() {
   }, []);
 
   const handleSendData = useCallback(async () => {
-    if (!webSerial.current || !inputText) return;
+    if (!webSerial.current || !sendData) return;
 
     try {
       if (sendMode === "hex") {
-        await webSerial.current.writeHex(inputText);
+        await webSerial.current.writeHex(sendData);
       } else {
         const textEncoder = new TextEncoder();
-        await webSerial.current.write(textEncoder.encode(inputText));
+        await webSerial.current.write(textEncoder.encode(sendData));
       }
       // Don't clear input text for easier re-sending
     } catch (error) {
       console.error(error);
       alert(String(error));
     }
-  }, [inputText, sendMode]);
+  }, [sendData, sendMode]);
 
   useEffect(() => {
     if (isConnected) {
@@ -240,8 +248,8 @@ function App() {
                   </label>
                 </div>
                 <textarea
-                  value={inputText}
-                  onChange={(e) => setInputText(e.target.value)}
+                  value={sendData}
+                  onChange={(e) => setSendData(e.target.value)}
                   rows={4}
                   className="textarea textarea-bordered w-full mt-2"
                 />

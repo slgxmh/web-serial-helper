@@ -9,7 +9,7 @@ const defaultProject: ProjectT = {
       baudRate: 115200,
       sendMode: "hex",
       sendData: "",
-      receivedMode: "hex",
+      receiveMode: "hex",
     },
   ],
 };
@@ -18,9 +18,9 @@ export const projectNameAtom = atom(defaultProject.name);
 export const projectItemsAtom = atom<ProjectItemT[]>(defaultProject.items);
 export const projectCurrentItemIndex = atom(0);
 
-export const currentItem = atom((get) => {
+export const projectCurrentItemAtom = atom((get) => {
   const index = get(projectCurrentItemIndex);
-  if (index < 0) return null;
+  if (index < 0) throw new Error("Error project item idx");
   const items = get(projectItemsAtom);
   return items[index];
 });
