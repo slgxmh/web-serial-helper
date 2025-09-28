@@ -1,6 +1,6 @@
 import {
   newProjectItem,
-  projectCurrentItemIndex,
+  projectCurrentItemIndexAtom,
   projectItemsAtom,
   projectNameAtom,
 } from "../../stores/project";
@@ -12,7 +12,7 @@ export function SiderBar() {
   const [projectName, setProjectName] = useAtom(projectNameAtom);
   const [projectItems] = useAtom(projectItemsAtom);
   const [, newItem] = useAtom(newProjectItem);
-  const [currentIndex, setCurrentIndex] = useAtom(projectCurrentItemIndex);
+  const [currentIndex, setCurrentIndex] = useAtom(projectCurrentItemIndexAtom);
 
   const { t } = useTranslation();
   return (

@@ -15,7 +15,7 @@ import { WebSerial } from "web-serial-helper";
 const MAX_RECEIVE_LENGTH = 100;
 
 function App() {
-  const [projectCurrentItem] = useAtom(projectCurrentItemAtom);
+  const [currentItem] = useAtom(projectCurrentItemAtom);
   const [, update] = useAtom(updateProjectCurrentItem);
   const [, load] = useAtom(loadProject);
   const [, deleteItem] = useAtom(deleteProjectItem);
@@ -28,24 +28,24 @@ function App() {
   const webSerial = useRef<WebSerial | null>(null);
   const [isConnected, setIsConnected] = useState(false);
   const [receivedData, setReceivedData] = useState<string[]>([]);
-  const [itemName, setItemName] = useState(projectCurrentItem.name);
+  const [itemName, setItemName] = useState(currentItem.name);
   const [sendMode, setSendMode] = useState<"text" | "hex">(
-    projectCurrentItem.sendMode,
+    currentItem.sendMode,
   );
   const [receiveMode, setReceiveMode] = useState<"text" | "hex">(
-    projectCurrentItem.receiveMode,
+    currentItem.receiveMode,
   );
-  const [sendData, setSendData] = useState(projectCurrentItem.sendData);
-  const [baudRate, setBaudRate] = useState(projectCurrentItem.baudRate);
+  const [sendData, setSendData] = useState(currentItem.sendData);
+  const [baudRate, setBaudRate] = useState(currentItem.baudRate);
   const [availablePorts, setAvailablePorts] = useState<SerialPort[]>([]);
 
   useEffect(() => {
-    setItemName(projectCurrentItem.name);
-    setSendMode(projectCurrentItem.sendMode);
-    setReceiveMode(projectCurrentItem.receiveMode);
-    setSendData(projectCurrentItem.sendData);
-    setBaudRate(projectCurrentItem.baudRate);
-  }, [projectCurrentItem]);
+    setItemName(currentItem.name);
+    setSendMode(currentItem.sendMode);
+    setReceiveMode(currentItem.receiveMode);
+    setSendData(currentItem.sendData);
+    setBaudRate(currentItem.baudRate);
+  }, [currentItem]);
 
   const handleSave = useCallback(() => {
     const item: Partial<ProjectItemT> = {

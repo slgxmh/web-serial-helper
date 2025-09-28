@@ -16,10 +16,10 @@ const defaultProject: ProjectT = {
 
 export const projectNameAtom = atom(defaultProject.name);
 export const projectItemsAtom = atom<ProjectItemT[]>(defaultProject.items);
-export const projectCurrentItemIndex = atom(0);
+export const projectCurrentItemIndexAtom = atom(0);
 
 export const projectCurrentItemAtom = atom((get) => {
-  const index = get(projectCurrentItemIndex);
+  const index = get(projectCurrentItemIndexAtom);
   if (index < 0) throw new Error("Error project item idx");
   const items = get(projectItemsAtom);
   return items[index];
@@ -28,7 +28,7 @@ export const projectCurrentItemAtom = atom((get) => {
 export const updateProjectCurrentItem = atom(
   null,
   (get, set, update: Partial<ProjectItemT>) => {
-    const index = get(projectCurrentItemIndex);
+    const index = get(projectCurrentItemIndexAtom);
     if (index < 0) throw new Error("Error project item idx");
     const items = get(projectItemsAtom);
     set(
@@ -42,11 +42,11 @@ export const updateProjectCurrentItem = atom(
 export const newProjectItem = atom(null, (get, set) => {
   const items = get(projectItemsAtom);
   set(projectItemsAtom, items.concat(defaultProject.items[0]));
-  set(projectCurrentItemIndex, items.length);
+  set(projectCurrentItemIndexAtom, items.length);
 });
 
 export const deleteProjectItem = atom(null, (get, set) => {
-  const index = get(projectCurrentItemIndex);
+  const index = get(projectCurrentItemIndexAtom);
   const items = get(projectItemsAtom);
   if (items.length <= 1) {
     throw new Error("alertDeleteLast");
@@ -54,7 +54,7 @@ export const deleteProjectItem = atom(null, (get, set) => {
   const newItems = items.filter((_, i) => i !== index);
   set(projectItemsAtom, newItems);
   if (index >= newItems.length) {
-    set(projectCurrentItemIndex, newItems.length - 1);
+    set(projectCurrentItemIndexAtom, newItems.length - 1);
   }
   set(saveProject);
 });
@@ -89,7 +89,7 @@ export const loadProject = atom(null, (_, set) => {
 
     set(projectNameAtom, projectData.data.name);
     set(projectItemsAtom, projectData.data.items);
-    set(projectCurrentItemIndex, 0);
+    set(projectCurrentItemIndexAtom, 0);
   } catch (e) {
     alert("Failed to load project: " + (e as Error).message);
   }
