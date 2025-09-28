@@ -150,46 +150,42 @@ function SerialComponent() {
   const [receivedData, setReceivedData] = useState([]);
   const {
     isSupported,
-    port,
     isConnected,
+    port,
     requestPort,
     open,
     close,
     write,
-    writeHex,
     getPorts,
+    setPort,
   } = useWebSerial({
     onData: (data) => {
       const textDecoder = new TextDecoder();
       setReceivedData(prev => [...prev, textDecoder.decode(data)]);
     },
-    onError: (error) => {
-      console.error('Serial error:', error);
-    }
   });
 
   useEffect(() => {
-    // You can get available ports and auto connect
     const autoConnect = async () => {
-        const availablePorts = await getPorts();
-        if (availablePorts.length > 0) {
-            // open the first available port
-            await open({ baudRate: 9600 });
-        }
+      const ports = await getPorts();
+      if (ports.length > 0) {
+        setPort(ports[0]);
+        await open({ baudRate: 9600 });
+      }
+    };
+    if (isSupported && !isConnected) {
+      autoConnect();
     }
-    if(isSupported && !isConnected) {
-        autoConnect();
-    }
-  }, [getPorts, isSupported, isConnected, open]);
+  }, [isSupported, isConnected, getPorts, setPort, open]);
 
-  const handleConnect = async () => {
+  const handleConnectClick = async () => {
     await requestPort();
     if (port) {
       await open({ baudRate: 9600 });
     }
   };
 
-  const handleSend = async () => {
+  const handleSendData = async () => {
     const textEncoder = new TextEncoder();
     await write(textEncoder.encode("Hello from React!"));
   };
@@ -202,9 +198,9 @@ function SerialComponent() {
           {isConnected ? (
             <button onClick={close}>Disconnect</button>
           ) : (
-            <button onClick={handleConnect}>Connect</button>
+            <button onClick={handleConnectClick}>Connect</button>
           )}
-          <button onClick={handleSend} disabled={!isConnected}>Send "Hello"</button>
+          <button onClick={handleSendData} disabled={!isConnected}>Send "Hello"</button>
           <div>
             <h2>Received Data:</h2>
             <ul>
@@ -226,20 +222,21 @@ function SerialComponent() {
 
 The hook takes an optional `options` object with the following properties:
 
--   `onData?: (data: Uint8Array) => void`: Callback function to handle incoming data as a `Uint8Array`.
--   `onDataHex?: (data: string) => void`: Callback function to handle incoming data as a hex string.
--   `onError?: (error: any) => void`: Callback function to handle errors.
+-   `onData?: (data: Uint8Array) => void`: Callback for handling incoming data as a `Uint8Array`.
+-   `onDataHex?: (data: string) => void`: Callback for handling incoming data as a hex string.
+-   `onError?: (error: any) => void`: Callback for handling errors.
 
 ### Return Values
 
 The hook returns an object with the following properties:
 
--   `isSupported: boolean`: A boolean indicating whether the Web Serial API is supported by the browser.
--   `port: SerialPort | null`: The currently selected `SerialPort` object.
--   `isConnected: boolean`: A boolean indicating whether a serial port is currently connected.
--   `requestPort: () => Promise<void>`: A function to request a serial port from the user.
--   `open: (options: SerialOptions) => Promise<void>`: A function to open the selected serial port.
--   `close: () => Promise<void>`: A function to close the serial port.
--   `write: (data: Uint8Array) => Promise<void>`: A function to write a `Uint8Array` to the serial port.
--   `writeHex: (hex: string) => Promise<void>`: A function to write a hex string to the serial port.
--   `getPorts: () => Promise<SerialPort[]>`: A function to get the list of available serial ports that have been previously granted permission.
+-   `isSupported: boolean`: Indicates if the Web Serial API is supported.
+-   `port: SerialPort | null`: The current `SerialPort` object.
+-   `isConnected: boolean`: Indicates if a serial port is connected.
+-   `requestPort: () => Promise<void>`: Function to request a serial port from the user.
+-   `open: (options: SerialOptions) => Promise<void>`: Function to open the selected serial port.
+-   `close: () => Promise<void>`: Function to close the serial port.
+-   `write: (data: Uint8Array) => Promise<void>`: Function to write a `Uint8Array` to the port.
+-   `writeHex: (hex: string) => Promise<void>`: Function to write a hex string to the port.
+-   `getPorts: () => Promise<SerialPort[]>`: Function to get previously permitted serial ports.
+-   `setPort: (port: SerialPort) => void`: Function to manually set the serial port.

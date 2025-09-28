@@ -1,6 +1,6 @@
 {
   "name": "web-serial-helper",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "A helper library for Web Serial API",
   "author": "slgxmh <slgxmh@foxmail.com>",
   "main": "./dist/index.js",
