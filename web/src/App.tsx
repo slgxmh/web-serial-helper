@@ -1,6 +1,7 @@
 import Layout from "./components/layout";
 import "./i18n";
 import {
+  loadProject,
   projectCurrentItemAtom,
   updateProjectCurrentItem,
 } from "./stores/project";
@@ -15,6 +16,11 @@ const MAX_RECEIVE_LENGTH = 100;
 function App() {
   const [projectCurrentItem] = useAtom(projectCurrentItemAtom);
   const [, update] = useAtom(updateProjectCurrentItem);
+  const [, load] = useAtom(loadProject);
+
+  useEffect(() => {
+    load();
+  }, [load]);
 
   const { t } = useTranslation();
   const webSerial = useRef<WebSerial | null>(null);

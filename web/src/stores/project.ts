@@ -35,6 +35,7 @@ export const updateProjectCurrentItem = atom(
       projectItemsAtom,
       items.map((item, i) => (i === index ? { ...item, ...update } : item)),
     );
+    set(saveProject);
   },
 );
 
@@ -63,7 +64,6 @@ export const saveProject = atom(null, (get) => {
 export const loadProject = atom(null, (_, set) => {
   const data = localStorage.getItem("project");
   if (!data) {
-    alert("No project found in local storage.");
     return;
   }
   try {
@@ -75,7 +75,7 @@ export const loadProject = atom(null, (_, set) => {
 
     set(projectNameAtom, projectData.data.name);
     set(projectItemsAtom, projectData.data.items);
-    set(projectCurrentItemIndex, -1);
+    set(projectCurrentItemIndex, 0);
   } catch (e) {
     alert("Failed to load project: " + (e as Error).message);
   }
