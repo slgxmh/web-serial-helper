@@ -1,5 +1,5 @@
 import {
-  newProjectItem,
+  projectItemNewAtom,
   projectCurrentItemIndexAtom,
   projectItemsAtom,
   projectNameAtom,
@@ -11,7 +11,7 @@ import { useTranslation } from "react-i18next";
 export function SiderBar() {
   const [projectName, setProjectName] = useAtom(projectNameAtom);
   const [projectItems] = useAtom(projectItemsAtom);
-  const [, newItem] = useAtom(newProjectItem);
+  const [, newItem] = useAtom(projectItemNewAtom);
   const [currentIndex, setCurrentIndex] = useAtom(projectCurrentItemIndexAtom);
 
   const { t } = useTranslation();

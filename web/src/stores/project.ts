@@ -31,12 +31,11 @@ export const projectNewFileAtom = atom(null, async (get, set) => {
 
 export const projectCurrentItemAtom = atom((get) => {
   const index = get(projectCurrentItemIndexAtom);
-  if (index < 0) throw new Error("Error project item idx");
   const items = get(projectItemsAtom);
   return items[index];
 });
 
-export const updateProjectCurrentItem = atom(
+export const projectItemUpdateAtom = atom(
   null,
   (get, set, update: Partial<ProjectItemT>) => {
     const index = get(projectCurrentItemIndexAtom);
@@ -46,17 +45,17 @@ export const updateProjectCurrentItem = atom(
       projectItemsAtom,
       items.map((item, i) => (i === index ? { ...item, ...update } : item)),
     );
-    set(saveProject);
+    set(projectSaveAtom);
   },
 );
 
-export const newProjectItem = atom(null, (get, set) => {
+export const projectItemNewAtom = atom(null, (get, set) => {
   const items = get(projectItemsAtom);
   set(projectItemsAtom, items.concat(defaultProject.items[0]));
   set(projectCurrentItemIndexAtom, items.length);
 });
 
-export const deleteProjectItem = atom(null, (get, set) => {
+export const projcetItemDeleteAtom = atom(null, (get, set) => {
   const index = get(projectCurrentItemIndexAtom);
   const items = get(projectItemsAtom);
   if (items.length <= 1) {
@@ -67,10 +66,10 @@ export const deleteProjectItem = atom(null, (get, set) => {
   if (index >= newItems.length) {
     set(projectCurrentItemIndexAtom, newItems.length - 1);
   }
-  set(saveProject);
+  set(projectSaveAtom);
 });
 
-export const saveProject = atom(null, async (get) => {
+export const projectSaveAtom = atom(null, async (get) => {
   const name = get(projectNameAtom);
   const items = get(projectItemsAtom);
 
@@ -94,7 +93,7 @@ export const saveProject = atom(null, async (get) => {
   }
 });
 
-export const loadProject = atom(null, async (get, set) => {
+export const projectLoadAtom = atom(null, async (get, set) => {
   const fileHandle = get(projectFileAtom);
   if (fileHandle) {
     try {

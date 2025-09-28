@@ -1,9 +1,14 @@
-import { projectFileAtom, projectNewFileAtom } from "../../../stores/project";
+import {
+  projectLoadAtom,
+  projectFileAtom,
+  projectNewFileAtom,
+} from "@/stores/project";
 import { useAtom, useSetAtom } from "jotai";
 import { useTranslation } from "react-i18next";
 
 export default function HomeView() {
   const [, setFile] = useAtom(projectFileAtom);
+  const [, loadFile] = useAtom(projectLoadAtom);
   const newFile = useSetAtom(projectNewFileAtom);
 
   const { t } = useTranslation();
@@ -26,6 +31,7 @@ export default function HomeView() {
     try {
       const [fileHandle] = await window.showOpenFilePicker(pickerOpts);
       setFile(fileHandle);
+      loadFile();
     } catch (e) {
       console.log(e);
     }
