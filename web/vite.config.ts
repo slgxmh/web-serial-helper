@@ -2,6 +2,7 @@ import tailwindcss from "@tailwindcss/vite";
 import react from "@vitejs/plugin-react";
 import jotaiDebugLabel from "jotai/babel/plugin-debug-label";
 import jotaiReactRefresh from "jotai/babel/plugin-react-refresh";
+import path from "path";
 import { defineConfig } from "vite";
 
 // https://vite.dev/config/
@@ -10,4 +11,9 @@ export default defineConfig({
     react({ babel: { plugins: [jotaiDebugLabel, jotaiReactRefresh] } }),
     tailwindcss(),
   ],
+  resolve: {
+    alias: {
+      "@": path.resolve(__dirname, "./src"),
+    },
+  },
 });
