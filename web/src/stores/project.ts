@@ -2,10 +2,11 @@ import { type ProjectT, type ProjectItemT, projectZ } from "../types/project";
 import { atom } from "jotai";
 
 const defaultProject: ProjectT = {
-  name: "hello serial",
+  version: 0,
+  name: "",
   items: [
     {
-      name: "hello world",
+      name: "hello serial",
       baudRate: 115200,
       sendMode: "hex",
       sendData: "",
@@ -17,6 +18,16 @@ const defaultProject: ProjectT = {
 export const projectNameAtom = atom(defaultProject.name);
 export const projectItemsAtom = atom<ProjectItemT[]>(defaultProject.items);
 export const projectCurrentItemIndexAtom = atom(0);
+export const projectFileAtom = atom<FileSystemFileHandle | null>(null);
+
+export const projectNewFileAtom = atom(null, async (get, set) => {
+  const fileHandle = get(projectFileAtom);
+  if (!fileHandle) return;
+  const writable = await fileHandle.createWritable();
+  await writable.write(JSON.stringify(defaultProject, null, 2));
+  await writable.close();
+  set(projectFileAtom, fileHandle);
+});
 
 export const projectCurrentItemAtom = atom((get) => {
   const index = get(projectCurrentItemIndexAtom);
@@ -59,38 +70,47 @@ export const deleteProjectItem = atom(null, (get, set) => {
   set(saveProject);
 });
 
-export const saveProject = atom(null, (get) => {
+export const saveProject = atom(null, async (get) => {
   const name = get(projectNameAtom);
   const items = get(projectItemsAtom);
-  if (!name) {
-    alert("Please enter a project name.");
-    return;
-  }
 
   const projectData: ProjectT = {
+    version: 0,
     name,
     items,
   };
 
-  localStorage.setItem("project", JSON.stringify(projectData));
+  const fileHandle = get(projectFileAtom);
+  if (fileHandle) {
+    try {
+      const writable = await fileHandle.createWritable();
+      await writable.write(JSON.stringify(projectData, null, 2));
+      await writable.close();
+    } catch (e) {
+      alert("Failed to save project: " + (e as Error).message);
+    }
+  } else {
+    throw new Error("Error project file");
+  }
 });
 
-export const loadProject = atom(null, (_, set) => {
-  const data = localStorage.getItem("project");
-  if (!data) {
-    return;
-  }
-  try {
-    const projectData = projectZ.safeParse(JSON.parse(data));
-    if (!projectData.success) {
-      alert("Failed to load project: " + projectData.error.message);
-      return;
+export const loadProject = atom(null, async (get, set) => {
+  const fileHandle = get(projectFileAtom);
+  if (fileHandle) {
+    try {
+      const file = await fileHandle.getFile();
+      const contents = await file.text();
+      const projectData = projectZ.safeParse(JSON.parse(contents));
+      if (!projectData.success) {
+        throw new Error(projectData.error.message);
+      }
+      set(projectNameAtom, projectData.data.name);
+      set(projectItemsAtom, projectData.data.items);
+      set(projectCurrentItemIndexAtom, 0);
+    } catch (e) {
+      throw new Error("Failed to load project: " + (e as Error).message);
     }
-
-    set(projectNameAtom, projectData.data.name);
-    set(projectItemsAtom, projectData.data.items);
-    set(projectCurrentItemIndexAtom, 0);
-  } catch (e) {
-    alert("Failed to load project: " + (e as Error).message);
+  } else {
+    throw new Error("Error project file");
   }
 });

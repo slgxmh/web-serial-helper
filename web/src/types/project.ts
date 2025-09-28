@@ -10,6 +10,7 @@ export const projectItemZ = z.object({
 export type ProjectItemT = z.infer<typeof projectItemZ>;
 
 export const projectZ = z.object({
+  version: z.number().min(0),
   name: z.string(),
   items: z.array(projectItemZ),
 });
