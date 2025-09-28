@@ -24,7 +24,6 @@ export function SiderBar() {
           </label>
           <input
             type="text"
-            defaultValue={t("defaultProjectName")}
             value={projectName}
             onChange={(e) => setProjectName(e.target.value)}
             className="input input-bordered w-full max-w-xs"
