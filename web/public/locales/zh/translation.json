@@ -1,8 +1,10 @@
 {
   "appName": "Web串口助手",
+  "alertDeleteLast": "请勿删除最后一项",
   "baudRate": "波特率",
   "clear": "清空",
   "connect": "连接",
+  "delete": "删除",
   "disconnect": "断开连接",
   "hex": "十六进制",
   "projectName": "项目名称",

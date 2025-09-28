@@ -1,6 +1,7 @@
 import Layout from "./components/layout";
 import "./i18n";
 import {
+  deleteProjectItem,
   loadProject,
   projectCurrentItemAtom,
   updateProjectCurrentItem,
@@ -17,6 +18,7 @@ function App() {
   const [projectCurrentItem] = useAtom(projectCurrentItemAtom);
   const [, update] = useAtom(updateProjectCurrentItem);
   const [, load] = useAtom(loadProject);
+  const [, deleteItem] = useAtom(deleteProjectItem);
 
   useEffect(() => {
     load();
@@ -55,6 +57,15 @@ function App() {
     };
     update(item);
   }, [baudRate, itemName, receiveMode, sendData, sendMode, update]);
+
+  const handleDelete = useCallback(() => {
+    try {
+      deleteItem();
+    } catch (e) {
+      const err = e as Error;
+      alert(t(err.message));
+    }
+  }, [deleteItem, t]);
 
   useEffect(() => {
     webSerial.current = new WebSerial();
@@ -211,6 +222,9 @@ function App() {
                 {t("disconnect")}
               </button>
             )}
+            <button className="btn btn-error" onClick={() => handleDelete()}>
+              {t("delete")}
+            </button>
           </div>
 
           <div className="grid grid-cols-1 xl:grid-cols-2 gap-4">

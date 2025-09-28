@@ -1,9 +1,10 @@
 {
   "appName": "Web Serial Helper",
+  "alertDeleteLast": "Cannot delete the last one",
   "baudRate": "Baud Rate",
   "clear": "Clear",
   "connect": "Connect",
-  "defaultProjectName": "Some Name",
+  "delete": "Delete",
   "disconnect": "Disconnect",
   "hex": "Hex",
   "projectName": "Project Name",

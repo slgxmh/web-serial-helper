@@ -45,6 +45,20 @@ export const newProjectItem = atom(null, (get, set) => {
   set(projectCurrentItemIndex, items.length);
 });
 
+export const deleteProjectItem = atom(null, (get, set) => {
+  const index = get(projectCurrentItemIndex);
+  const items = get(projectItemsAtom);
+  if (items.length <= 1) {
+    throw new Error("alertDeleteLast");
+  }
+  const newItems = items.filter((_, i) => i !== index);
+  set(projectItemsAtom, newItems);
+  if (index >= newItems.length) {
+    set(projectCurrentItemIndex, newItems.length - 1);
+  }
+  set(saveProject);
+});
+
 export const saveProject = atom(null, (get) => {
   const name = get(projectNameAtom);
   const items = get(projectItemsAtom);
