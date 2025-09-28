@@ -131,3 +131,115 @@ Writes a hex string to the serial port.
 
 ### `getPort(): SerialPort | null`
 Gets the currently selected `SerialPort` object.
+
+## React Hook Usage
+
+This library also provides a React hook `useWebSerial` for easy integration with React applications.
+
+### Installation
+
+You need to have `react` installed in your project.
+
+### Example
+
+```jsx
+import { useWebSerial } from 'web-serial-helper/react';
+import { useState, useEffect } from 'react';
+
+function SerialComponent() {
+  const [receivedData, setReceivedData] = useState([]);
+  const {
+    isSupported,
+    port,
+    isConnected,
+    requestPort,
+    open,
+    close,
+    write,
+    writeHex,
+    getPorts,
+  } = useWebSerial({
+    onData: (data) => {
+      const textDecoder = new TextDecoder();
+      setReceivedData(prev => [...prev, textDecoder.decode(data)]);
+    },
+    onError: (error) => {
+      console.error('Serial error:', error);
+    }
+  });
+
+  useEffect(() => {
+    // You can get available ports and auto connect
+    const autoConnect = async () => {
+        const availablePorts = await getPorts();
+        if (availablePorts.length > 0) {
+            // open the first available port
+            await open({ baudRate: 9600 });
+        }
+    }
+    if(isSupported && !isConnected) {
+        autoConnect();
+    }
+  }, [getPorts, isSupported, isConnected, open]);
+
+  const handleConnect = async () => {
+    await requestPort();
+    if (port) {
+      await open({ baudRate: 9600 });
+    }
+  };
+
+  const handleSend = async () => {
+    const textEncoder = new TextEncoder();
+    await write(textEncoder.encode("Hello from React!"));
+  };
+
+  return (
+    <div>
+      <h1>Web Serial with React</h1>
+      {isSupported ? (
+        <div>
+          {isConnected ? (
+            <button onClick={close}>Disconnect</button>
+          ) : (
+            <button onClick={handleConnect}>Connect</button>
+          )}
+          <button onClick={handleSend} disabled={!isConnected}>Send "Hello"</button>
+          <div>
+            <h2>Received Data:</h2>
+            <ul>
+              {receivedData.map((data, index) => (
+                <li key={index}>{data}</li>
+              ))}
+            </ul>
+          </div>
+        </div>
+      ) : (
+        <p>Web Serial API is not supported in this browser.</p>
+      )}
+    </div>
+  );
+}
+```
+
+### `useWebSerial(options?: UseWebSerialOptions)`
+
+The hook takes an optional `options` object with the following properties:
+
+-   `onData?: (data: Uint8Array) => void`: Callback function to handle incoming data as a `Uint8Array`.
+-   `onDataHex?: (data: string) => void`: Callback function to handle incoming data as a hex string.
+-   `onError?: (error: any) => void`: Callback function to handle errors.
+
+### Return Values
+
+The hook returns an object with the following properties:
+
+-   `isSupported: boolean`: A boolean indicating whether the Web Serial API is supported by the browser.
+-   `port: SerialPort | null`: The currently selected `SerialPort` object.
+-   `isConnected: boolean`: A boolean indicating whether a serial port is currently connected.
+-   `requestPort: () => Promise<void>`: A function to request a serial port from the user.
+-   `open: (options: SerialOptions) => Promise<void>`: A function to open the selected serial port.
+-   `close: () => Promise<void>`: A function to close the serial port.
+-   `write: (data: Uint8Array) => Promise<void>`: A function to write a `Uint8Array` to the serial port.
+-   `writeHex: (hex: string) => Promise<void>`: A function to write a hex string to the serial port.
+-   `getPorts: () => Promise<SerialPort[]>`: A function to get the list of available serial ports that have been previously granted permission.
