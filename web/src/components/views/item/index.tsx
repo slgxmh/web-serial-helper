@@ -9,6 +9,8 @@ import { useCallback, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useWebSerial } from "web-serial-helper/react";
 
+const MAX_RECEIVE_SIZE = 100;
+
 export function ItemView() {
   const [currentItem] = useAtom(projectCurrentItemAtom);
   const [, update] = useAtom(projectItemUpdateAtom);
@@ -26,11 +28,15 @@ export function ItemView() {
 
   const onData = useCallback((data: Uint8Array) => {
     const textDecoder = new TextDecoder();
-    setReceivedData((prev) => [...prev, textDecoder.decode(data)]);
+    setReceivedData((prev) =>
+      [...prev, textDecoder.decode(data)].slice(-MAX_RECEIVE_SIZE),
+    );
   }, []);
 
   const onDataHex = useCallback((data: string) => {
-    setReceivedData((prev) => [...prev, `[HEX] ${data}`]);
+    setReceivedData((prev) =>
+      [...prev, `[HEX] ${data}`].slice(-MAX_RECEIVE_SIZE),
+    );
   }, []);
 
   const {
