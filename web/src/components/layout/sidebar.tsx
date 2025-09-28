@@ -1,5 +1,6 @@
 import {
   newProjectItem,
+  projectCurrentItemIndex,
   projectItemsAtom,
   projectNameAtom,
 } from "../../stores/project";
@@ -11,6 +12,7 @@ export function SiderBar() {
   const [projectName, setProjectName] = useAtom(projectNameAtom);
   const [projectItems] = useAtom(projectItemsAtom);
   const [, newItem] = useAtom(newProjectItem);
+  const [currentIndex, setCurrentIndex] = useAtom(projectCurrentItemIndex);
 
   const { t } = useTranslation();
   return (
@@ -29,8 +31,12 @@ export function SiderBar() {
           />
         </div>
       </li>
-      {projectItems.map((projectItem) => (
-        <li key={projectItem.name}>
+      {projectItems.map((projectItem, index) => (
+        <li
+          key={projectItem.name}
+          className={currentIndex === index ? "bg-accent-content" : ""}
+          onClick={() => setCurrentIndex(index)}
+        >
           <a>{projectItem.name}</a>
         </li>
       ))}
