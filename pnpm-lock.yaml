@@ -32,6 +32,9 @@ importers:
 
   lib:
     dependencies:
+      '@types/react':
+        specifier: '>=17.0.0'
+        version: 19.1.12
       react:
         specifier: '>=17.0.0'
         version: 19.1.1
