@@ -5,7 +5,7 @@ import {
 } from "@/stores/project";
 import type { ProjectItemT } from "@/types/project";
 import { useAtom } from "jotai";
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useWebSerial } from "web-serial-helper/react";
 
@@ -25,6 +25,7 @@ export function ItemView() {
   const [availablePorts, setAvailablePorts] = useState<SerialPort[]>([]);
 
   const { t } = useTranslation();
+  const receiveBoxRef = useRef<HTMLTextAreaElement>(null);
 
   const onData = useCallback((data: Uint8Array) => {
     const textDecoder = new TextDecoder();
@@ -42,12 +43,14 @@ export function ItemView() {
   const {
     isSupported,
     isConnected,
+    port,
     requestPort,
     open,
     close,
     write,
     writeHex,
     getPorts,
+    setPort,
   } = useWebSerial({
     onData: receiveMode === "text" ? onData : undefined,
     onDataHex: receiveMode === "hex" ? onDataHex : undefined,
@@ -56,6 +59,7 @@ export function ItemView() {
     },
   });
 
+  // 更新 currentItem 时同步 state
   useEffect(() => {
     setItemName(currentItem.name);
     setSendMode(currentItem.sendMode);
@@ -84,6 +88,7 @@ export function ItemView() {
     }
   }, [deleteItem, t]);
 
+  // 获取端口
   useEffect(() => {
     const fetchPorts = async () => {
       if (isSupported) {
@@ -96,7 +101,14 @@ export function ItemView() {
       }
     };
     fetchPorts();
-  }, [isSupported, getPorts, isConnected]);
+  }, [isSupported, getPorts, port, setPort]);
+
+  // 滚动跟随
+  useEffect(() => {
+    if (receiveBoxRef.current) {
+      receiveBoxRef.current.scrollTop = receiveBoxRef.current.scrollHeight;
+    }
+  }, [receivedData]);
 
   const handleConnect = useCallback(async () => {
     try {
@@ -108,9 +120,7 @@ export function ItemView() {
   }, [baudRate, open, requestPort]);
 
   const handleAutoConnect = useCallback(async () => {
-    if (availablePorts.length === 0) {
-      return;
-    }
+    if (availablePorts.length === 0) return;
     try {
       await open({ baudRate });
     } catch (error) {
@@ -121,17 +131,13 @@ export function ItemView() {
   const handleDisconnect = useCallback(async () => {
     try {
       await close();
-      setReceivedData([]); // Clear received data on disconnect
     } catch (error) {
       console.error(error);
     }
   }, [close]);
 
   const handleSendData = useCallback(async () => {
-    if (!sendData) {
-      return;
-    }
-
+    if (!sendData) return;
     try {
       if (sendMode === "hex") {
         await writeHex(sendData);
@@ -160,36 +166,40 @@ export function ItemView() {
           {t("save")}
         </button>
       </div>
+
       <div className="flex justify-between items-center">
-        {!isConnected ? (
-          <div className="flex items-center gap-2">
-            <span className="label">{t("baudRate")}:</span>
-            <input
-              type="number"
-              value={baudRate}
-              onChange={(e) => setBaudRate(Number(e.target.value))}
-              className="input"
-            />
-            <button onClick={handleConnect} className="btn btn-primary">
-              {t("connect")}
-            </button>
-            {availablePorts.length > 0 && (
-              <button onClick={handleAutoConnect} className="btn btn-accent">
-                {t("reconnect")}
+        <div className="flex items-center gap-2">
+          <span className="label">{t("baudRate")}:</span>
+          <input
+            type="number"
+            value={baudRate}
+            onChange={(e) => setBaudRate(Number(e.target.value))}
+            className="input"
+          />
+          {!isConnected ? (
+            <>
+              <button onClick={handleConnect} className="btn btn-primary">
+                {t("connect")}
               </button>
-            )}
-          </div>
-        ) : (
-          <button onClick={handleDisconnect} className="btn btn-secondary">
-            {t("disconnect")}
-          </button>
-        )}
+              {availablePorts.length > 0 && (
+                <button onClick={handleAutoConnect} className="btn btn-accent">
+                  {t("reconnect")}
+                </button>
+              )}
+            </>
+          ) : (
+            <button onClick={handleDisconnect} className="btn btn-secondary">
+              {t("disconnect")}
+            </button>
+          )}
+        </div>
         <button className="btn btn-error" onClick={() => handleDelete()}>
           {t("delete")}
         </button>
       </div>
 
       <div className="grid grid-cols-1 xl:grid-cols-2 gap-4">
+        {/* 接收区 */}
         <div className="card bg-base-100 shadow-xl">
           <div className="card-body">
             <h2 className="card-title">{t("receive")}</h2>
@@ -220,6 +230,7 @@ export function ItemView() {
               </label>
             </div>
             <textarea
+              ref={receiveBoxRef}
               readOnly
               value={receivedData.join("\n")}
               rows={10}
@@ -236,6 +247,7 @@ export function ItemView() {
           </div>
         </div>
 
+        {/* 发送区 */}
         <div className="card bg-base-100 shadow-xl">
           <div className="card-body">
             <h2 className="card-title">{t("send")}</h2>
