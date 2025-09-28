@@ -1,6 +1,10 @@
 import Layout from "./components/layout";
 import "./i18n";
-import { projectCurrentItemAtom } from "./stores/project";
+import {
+  projectCurrentItemAtom,
+  updateProjectCurrentItem,
+} from "./stores/project";
+import { type ProjectItemT } from "./types/project";
 import { useAtom } from "jotai";
 import { useState, useRef, useCallback, useEffect } from "react";
 import { useTranslation } from "react-i18next";
@@ -10,6 +14,7 @@ const MAX_RECEIVE_LENGTH = 100;
 
 function App() {
   const [projectCurrentItem] = useAtom(projectCurrentItemAtom);
+  const [, update] = useAtom(updateProjectCurrentItem);
 
   const { t } = useTranslation();
   const webSerial = useRef<WebSerial | null>(null);
@@ -25,6 +30,17 @@ function App() {
   const [sendData, setSendData] = useState(projectCurrentItem.sendData);
   const [baudRate, setBaudRate] = useState(projectCurrentItem.baudRate);
   const [availablePorts, setAvailablePorts] = useState<SerialPort[]>([]);
+
+  const handleSave = useCallback(() => {
+    const item: Partial<ProjectItemT> = {
+      name: itemName,
+      sendMode,
+      receiveMode,
+      sendData,
+      baudRate,
+    };
+    update(item);
+  }, [baudRate, itemName, receiveMode, sendData, sendMode, update]);
 
   useEffect(() => {
     webSerial.current = new WebSerial();
@@ -150,7 +166,9 @@ function App() {
               onChange={(e) => setItemName(e.target.value)}
             />
             <div className="flex-1"></div>
-            <button className="btn btn-secondary">{t("save")}</button>
+            <button className="btn btn-secondary" onClick={handleSave}>
+              {t("save")}
+            </button>
           </div>
           <div className="flex justify-between items-center">
             {!isConnected ? (

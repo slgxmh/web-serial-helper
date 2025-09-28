@@ -25,6 +25,19 @@ export const projectCurrentItemAtom = atom((get) => {
   return items[index];
 });
 
+export const updateProjectCurrentItem = atom(
+  null,
+  (get, set, update: Partial<ProjectItemT>) => {
+    const index = get(projectCurrentItemIndex);
+    if (index < 0) throw new Error("Error project item idx");
+    const items = get(projectItemsAtom);
+    set(
+      projectItemsAtom,
+      items.map((item, i) => (i === index ? { ...item, ...update } : item)),
+    );
+  },
+);
+
 export const saveProject = atom(null, (get) => {
   const name = get(projectNameAtom);
   const items = get(projectItemsAtom);
