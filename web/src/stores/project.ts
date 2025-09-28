@@ -38,6 +38,12 @@ export const updateProjectCurrentItem = atom(
   },
 );
 
+export const newProjectItem = atom(null, (get, set) => {
+  const items = get(projectItemsAtom);
+  set(projectItemsAtom, items.concat(defaultProject.items[0]));
+  set(projectCurrentItemIndex, items.length);
+});
+
 export const saveProject = atom(null, (get) => {
   const name = get(projectNameAtom);
   const items = get(projectItemsAtom);

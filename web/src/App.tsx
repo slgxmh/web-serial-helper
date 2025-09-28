@@ -31,6 +31,14 @@ function App() {
   const [baudRate, setBaudRate] = useState(projectCurrentItem.baudRate);
   const [availablePorts, setAvailablePorts] = useState<SerialPort[]>([]);
 
+  useEffect(() => {
+    setItemName(projectCurrentItem.name);
+    setSendMode(projectCurrentItem.sendMode);
+    setReceiveMode(projectCurrentItem.receiveMode);
+    setSendData(projectCurrentItem.sendData);
+    setBaudRate(projectCurrentItem.baudRate);
+  }, [projectCurrentItem]);
+
   const handleSave = useCallback(() => {
     const item: Partial<ProjectItemT> = {
       name: itemName,
