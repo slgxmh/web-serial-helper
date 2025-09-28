@@ -1,12 +1,21 @@
 {
   "appName": "Web串口助手",
+  "alertDeleteLast": "请勿删除最后一项",
   "baudRate": "波特率",
   "clear": "清空",
   "connect": "连接",
+  "delete": "删除",
   "disconnect": "断开连接",
   "hex": "十六进制",
+  "homeTitle": "请选择项目文件",
+  "homeFileSelect": "选择文件",
+  "homeFileNew": "新建文件",
+  "or": "或",
+  "projectName": "项目名称",
+  "projectItemName": "功能名",
   "reconnect": "重新连接",
   "receive": "接收",
+  "save": "保存",
   "send": "发送",
   "text": "文本"
 }

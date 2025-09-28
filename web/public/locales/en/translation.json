@@ -1,12 +1,21 @@
 {
   "appName": "Web Serial Helper",
+  "alertDeleteLast": "Cannot delete the last one",
   "baudRate": "Baud Rate",
   "clear": "Clear",
   "connect": "Connect",
+  "delete": "Delete",
   "disconnect": "Disconnect",
   "hex": "Hex",
+  "homeTitle": "Select a project file",
+  "homeFileSelect": "Select File",
+  "homeFileNew": "New File",
+  "or": "Or",
+  "projectName": "Project Name",
+  "projectItemName": "Fuction Name",
   "reconnect": "Reconnect",
   "receive": "Receive",
+  "save": "Save",
   "send": "Send",
   "text": "Text"
 }

@@ -1,6 +1,6 @@
 {
   "name": "web-serial-helper",
-  "version": "0.0.2",
+  "version": "0.1.0",
   "description": "A helper library for Web Serial API",
   "author": "slgxmh <slgxmh@foxmail.com>",
   "main": "./dist/index.js",
@@ -8,8 +8,14 @@
   "types": "./dist/index.d.ts",
   "exports": {
     ".": {
-      "require": "./dist/index.js",
-      "import": "./dist/index.mjs"
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.mjs",
+      "require": "./dist/index.js"
+    },
+    "./react": {
+      "types": "./dist/react.d.ts",
+      "import": "./dist/react.mjs",
+      "require": "./dist/react.js"
     }
   },
   "files": [
@@ -30,5 +36,17 @@
   "devDependencies": {
     "tsup": "^8.5.0",
     "typescript": "~5.8.3"
+  },
+  "peerDependencies": {
+    "@types/react": ">=17.0.0",
+    "react": ">=17.0.0"
+  },
+  "peerDependenciesMeta": {
+    "@types/react": {
+      "optional": true
+    },
+    "react": {
+      "optional": true
+    }
   }
 }
