@@ -11,6 +11,7 @@ export function useWebSerial(options?: UseWebSerialOptions) {
   const webSerial = useRef<WebSerial | null>(null);
   const [port, setPortState] = useState<SerialPort | null>(null);
   const [isConnected, setIsConnected] = useState(false);
+  const { onData, onDataHex, onError } = options || {};
 
   useEffect(() => {
     if (WebSerial.isSupported()) {
@@ -60,16 +61,16 @@ export function useWebSerial(options?: UseWebSerialOptions) {
   }, []);
 
   const startReading = useCallback(() => {
-    if (webSerial.current && options?.onData) {
-      webSerial.current.startReading(options.onData, options.onError);
+    if (webSerial.current && onData) {
+      webSerial.current.startReading(onData, onError);
     }
-  }, [options]);
+  }, [onData, onError]);
 
   const startReadingHex = useCallback(() => {
-    if (webSerial.current && options?.onDataHex) {
-      webSerial.current.startReadingHex(options.onDataHex, options.onError);
+    if (webSerial.current && onDataHex) {
+      webSerial.current.startReadingHex(onDataHex, onError);
     }
-  }, [options]);
+  }, [onDataHex, onError]);
 
   const stopReading = useCallback(async () => {
     if (webSerial.current) {
@@ -79,9 +80,9 @@ export function useWebSerial(options?: UseWebSerialOptions) {
 
   useEffect(() => {
     if (isConnected) {
-      if (options?.onData) {
+      if (onData) {
         startReading();
-      } else if (options?.onDataHex) {
+      } else if (onDataHex) {
         startReadingHex();
       }
     }
@@ -91,7 +92,7 @@ export function useWebSerial(options?: UseWebSerialOptions) {
         stopReading();
       }
     };
-  }, [isConnected, options, startReading, startReadingHex, stopReading]);
+  }, [isConnected, startReading, startReadingHex, stopReading]);
 
   return {
     isSupported: WebSerial.isSupported(),
